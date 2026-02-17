@@ -16,6 +16,7 @@ INSERT INTO GymRoles (nombre_rol) VALUES ('premium');
 CREATE TABLE GymUsuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre VARCHAR(100) NOT NULL,
+    usuario VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     id_rol INTEGER,
@@ -23,14 +24,14 @@ CREATE TABLE GymUsuarios (
 );
 
 -- Initial Users (Passwords should be hashed in a real app)
--- Admin: admin@gym.com / admin123
-INSERT INTO GymUsuarios (nombre, email, password, id_rol) VALUES ('Administrador', 'admin@gym.com', 'admin123', 1);
--- Employee: empleado@gym.com / emp123
-INSERT INTO GymUsuarios (nombre, email, password, id_rol) VALUES ('Juan Empleado', 'empleado@gym.com', 'emp123', 2);
--- Starter Member: starter@user.com / user123
-INSERT INTO GymUsuarios (nombre, email, password, id_rol) VALUES ('Pedro Starter', 'starter@user.com', 'user123', 3);
--- Premium Member: premium@user.com / user123
-INSERT INTO GymUsuarios (nombre, email, password, id_rol) VALUES ('Maria Premium', 'premium@user.com', 'user123', 4);
+-- Admin: admin / admin123
+INSERT INTO GymUsuarios (nombre, usuario, email, password, id_rol) VALUES ('Administrador', 'admin', 'admin@gym.com', 'admin123', 1);
+-- Employee: empleado1 / emp123
+INSERT INTO GymUsuarios (nombre, usuario, email, password, id_rol) VALUES ('Juan Empleado', 'empleado1', 'empleado@gym.com', 'emp123', 2);
+-- Starter Member: starter_user / user123
+INSERT INTO GymUsuarios (nombre, usuario, email, password, id_rol) VALUES ('Pedro Starter', 'starter_user', 'starter@user.com', 'user123', 3);
+-- Premium Member: premium_user / user123
+INSERT INTO GymUsuarios (nombre, usuario, email, password, id_rol) VALUES ('Maria Premium', 'premium_user', 'premium@user.com', 'user123', 4);
 
 -- Memberships Table
 CREATE TABLE GymMembresias (

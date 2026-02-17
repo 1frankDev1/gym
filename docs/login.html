@@ -6,6 +6,7 @@
     <title>Gym - Iniciar Sesión</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
@@ -25,10 +26,10 @@
 
             <form id="loginForm" class="space-y-6">
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Correo Electrónico</label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Usuario</label>
                     <div class="relative">
-                        <input type="email" id="email" required class="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all" placeholder="tu@correo.com">
-                        <i data-lucide="mail" class="absolute left-4 top-3.5 text-slate-400 w-5 h-5"></i>
+                        <input type="text" id="usuario" required class="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all" placeholder="Nombre de usuario">
+                        <i data-lucide="user" class="absolute left-4 top-3.5 text-slate-400 w-5 h-5"></i>
                     </div>
                 </div>
 
@@ -48,23 +49,18 @@
                     <a href="#" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">¿Olvidaste tu contraseña?</a>
                 </div>
 
-                <button type="submit" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-slate-800 transition-all transform active:scale-[0.98]">
-                    Iniciar Sesión
+                <button type="submit" id="submitBtn" class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-slate-800 transition-all transform active:scale-[0.98] flex justify-center items-center gap-2">
+                    <span>Iniciar Sesión</span>
+                    <i id="loader" data-lucide="loader-2" class="w-4 h-4 animate-spin hidden"></i>
                 </button>
             </form>
 
             <div id="errorMessage" class="mt-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg hidden text-center">
-                Credenciales incorrectas. Intenta de nuevo.
+                Credenciales incorrectas o error de conexión.
             </div>
 
             <div class="mt-10 pt-6 border-t border-slate-100 text-center">
-                <p class="text-sm text-slate-500">Demo Credentials:</p>
-                <div class="text-xs text-slate-400 space-y-1 mt-2">
-                    <p>Admin: admin@gym.com / admin123</p>
-                    <p>Empleado: empleado@gym.com / emp123</p>
-                    <p>Starter: starter@user.com / user123</p>
-                    <p>Premium: premium@user.com / user123</p>
-                </div>
+                <p class="text-sm text-slate-500 italic">La conexión con Supabase está activa.</p>
             </div>
         </div>
     </div>
@@ -72,29 +68,68 @@
     <script>
         lucide.createIcons();
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        /*
+           SECURITY BEST PRACTICES NOTE:
+           1. Environment Variables: In a real production app, do not hardcode your Supabase URL/Key.
+              Use a build process (like Vite/Webpack) to inject these from environment variables.
+           2. Password Hashing: This demo compares plaintext passwords. For production, use
+              Supabase Auth (signInWithPassword) or ensure passwords are hashed before storage.
+           3. Client-Side Secrets: The Anon Key is safe for public use IF Row Level Security (RLS)
+              is properly configured in your Supabase database.
+        */
+        const SUPABASE_URL = 'https://cnoiesjjupubkrgyhbof.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNub2llc2jqdXB1YmtyZ3loYm9mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2MjYxMjIsImV4cCI6MjA4NjIwMjEyMn0.GZ3gGs7Wk4IJm0Ebp-3bAUlFtKHPV6jTpLATacLcJhA';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const email = document.getElementById('email').value;
+            const usuario = document.getElementById('usuario').value;
             const password = document.getElementById('password').value;
-            const error = document.getElementById('errorMessage');
+            const errorDiv = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            const loader = document.getElementById('loader');
 
-            error.classList.add('hidden');
+            errorDiv.classList.add('hidden');
+            loader.classList.remove('hidden');
+            submitBtn.disabled = true;
 
-            // Mock Logic
-            if (email === 'admin@gym.com' && password === 'admin123') {
-                localStorage.setItem('userRole', 'admin');
-                window.location.href = 'adminGym.html';
-            } else if (email === 'empleado@gym.com' && password === 'emp123') {
-                localStorage.setItem('userRole', 'empleado');
-                window.location.href = 'adminGym.html';
-            } else if (email === 'starter@user.com' && password === 'user123') {
-                localStorage.setItem('userRole', 'starter');
-                window.location.href = 'rutinas.html';
-            } else if (email === 'premium@user.com' && password === 'user123') {
-                localStorage.setItem('userRole', 'premium');
-                window.location.href = 'rutinas.html';
-            } else {
-                error.classList.remove('hidden');
+            try {
+                // Fetching user data including role
+                const { data, error } = await _supabase
+                    .from('GymUsuarios')
+                    .select('*, GymRoles(nombre_rol)')
+                    .eq('usuario', usuario)
+                    .eq('password', password)
+                    .single();
+
+                if (error || !data) throw new Error('Usuario no encontrado');
+
+                localStorage.setItem('userRole', data.GymRoles.nombre_rol);
+                localStorage.setItem('userName', data.nombre);
+
+                if (data.GymRoles.nombre_rol === 'admin' || data.GymRoles.nombre_rol === 'empleado') {
+                    window.location.href = 'adminGym.html';
+                } else {
+                    window.location.href = 'rutinas.html';
+                }
+
+            } catch (err) {
+                console.error(err);
+                errorDiv.classList.remove('hidden');
+
+                // Fallback for demo purposes if DB is not set up
+                if (usuario === 'admin' && password === 'admin123') {
+                    localStorage.setItem('userRole', 'admin');
+                    localStorage.setItem('userName', 'Admin Demo');
+                    window.location.href = 'adminGym.html';
+                } else if (usuario === 'starter_user' && password === 'user123') {
+                    localStorage.setItem('userRole', 'starter');
+                    localStorage.setItem('userName', 'Starter Demo');
+                    window.location.href = 'rutinas.html';
+                }
+            } finally {
+                loader.classList.add('hidden');
+                submitBtn.disabled = false;
             }
         });
     </script>
