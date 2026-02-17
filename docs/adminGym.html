@@ -53,6 +53,9 @@
                 <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 flex items-center gap-2">
                     <i data-lucide="plus"></i> Nuevo Miembro
                 </button>
+                <button onclick="logout()" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg font-medium hover:bg-slate-300">
+                    Cerrar Sesión
+                </button>
             </div>
         </header>
 
@@ -313,6 +316,17 @@
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
+
+        function logout() {
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
+
+        // Basic Access Check
+        const role = localStorage.getItem('userRole');
+        if (!role || (role !== 'admin' && role !== 'empleado')) {
+            window.location.href = 'login.html';
+        }
     </script>
 </body>
 </html>
