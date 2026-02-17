@@ -6,6 +6,7 @@
     <title>Gym - Rutinas de Entrenamiento</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
@@ -158,6 +159,11 @@
     <script>
         lucide.createIcons();
 
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://cnoiesjjupubkrgyhbof.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNub2llc2jqdXB1YmtyZ3loYm9mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2MjYxMjIsImV4cCI6MjA4NjIwMjEyMn0.GZ3gGs7Wk4IJm0Ebp-3bAUlFtKHPV6jTpLATacLcJhA';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         function logout() {
             localStorage.removeItem('userRole');
             window.location.href = 'login.html';
@@ -167,8 +173,7 @@
         const role = localStorage.getItem('userRole');
         if (!role || (role !== 'starter' && role !== 'premium')) {
             if (role === 'admin' || role === 'empleado') {
-                // They can stay or be redirected to adminGym.html,
-                // but usually members and staff have different views.
+                // Allowed for staff as well in this demo
             } else {
                 window.location.href = 'login.html';
             }
