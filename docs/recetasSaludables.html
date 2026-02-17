@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym - Recetas Saludables</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            grid-auto-rows: minmax(180px, auto);
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .bento-item {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body class="p-6">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Recetas <span class="text-green-600">Saludables</span></h1>
+                <p class="text-slate-500">Nutrición balanceada para tus metas</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="rutinas.html" class="text-slate-600 hover:text-green-600 font-medium">Rutinas</a>
+                <button onclick="logout()" class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg font-medium hover:bg-slate-300">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <div class="bento-grid">
+            <!-- Featured Recipe -->
+            <div class="bento-item col-span-1 md:col-span-2 flex flex-row gap-6 bg-green-600 text-white border-none min-h-[300px]">
+                <div class="flex-1 flex flex-col justify-center">
+                    <span class="px-3 py-1 bg-green-500 rounded-full text-xs font-semibold uppercase w-fit">Receta Destacada</span>
+                    <h2 class="text-3xl font-bold mt-4">Bowl de Salmón y Quinoa</h2>
+                    <p class="mt-2 text-green-100 opacity-90">Rico en Omega-3 y proteínas de alta calidad. Perfecto para después de entrenar.</p>
+                    <div class="flex gap-4 mt-6">
+                        <div class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> <span class="text-sm">25 min</span></div>
+                        <div class="flex items-center gap-1"><i data-lucide="flame" class="w-4 h-4"></i> <span class="text-sm">450 kcal</span></div>
+                    </div>
+                </div>
+                <div class="hidden md:flex flex-1 bg-green-500/30 rounded-3xl items-center justify-center">
+                    <i data-lucide="utensils" class="w-24 h-24 opacity-20"></i>
+                </div>
+            </div>
+
+            <!-- Recipe Card -->
+            <div class="bento-item">
+                <div class="h-32 bg-slate-100 rounded-xl mb-4 flex items-center justify-center">
+                   <i data-lucide="egg" class="text-slate-300 w-12 h-12"></i>
+                </div>
+                <h3 class="font-bold text-slate-800">Desayuno Energético</h3>
+                <p class="text-slate-500 text-sm mt-1">Huevos poché con aguacate y pan integral.</p>
+                <div class="mt-auto pt-4 flex justify-between items-center">
+                    <span class="text-xs font-bold text-green-600">Fácil</span>
+                    <button class="text-indigo-600 text-sm font-semibold">Ver Receta</button>
+                </div>
+            </div>
+
+            <div class="bento-item">
+                <div class="h-32 bg-slate-100 rounded-xl mb-4 flex items-center justify-center">
+                   <i data-lucide="coffee" class="text-slate-300 w-12 h-12"></i>
+                </div>
+                <h3 class="font-bold text-slate-800">Smoothie Post-Work</h3>
+                <p class="text-slate-500 text-sm mt-1">Proteína de vainilla, banana y espinacas.</p>
+                <div class="mt-auto pt-4 flex justify-between items-center">
+                    <span class="text-xs font-bold text-green-600">Rápido</span>
+                    <button class="text-indigo-600 text-sm font-semibold">Ver Receta</button>
+                </div>
+            </div>
+
+            <div class="bento-item">
+                <div class="h-32 bg-slate-100 rounded-xl mb-4 flex items-center justify-center">
+                   <i data-lucide="leaf" class="text-slate-300 w-12 h-12"></i>
+                </div>
+                <h3 class="font-bold text-slate-800">Ensalada de Lentejas</h3>
+                <p class="text-slate-500 text-sm mt-1">Lentejas, tomate, pepino y vinagreta cítrica.</p>
+                <div class="mt-auto pt-4 flex justify-between items-center">
+                    <span class="text-xs font-bold text-green-600">Vegano</span>
+                    <button class="text-indigo-600 text-sm font-semibold">Ver Receta</button>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="bento-item col-span-1 md:col-span-2">
+                <h3 class="font-bold text-slate-800 mb-4">Categorías</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 hover:bg-green-50 transition-colors cursor-pointer group">
+                        <i data-lucide="apple" class="group-hover:text-green-600"></i>
+                        <span class="text-xs font-medium">Frutas</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 hover:bg-green-50 transition-colors cursor-pointer group">
+                        <i data-lucide="beef" class="group-hover:text-green-600"></i>
+                        <span class="text-xs font-medium">Proteínas</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 hover:bg-green-50 transition-colors cursor-pointer group">
+                        <i data-lucide="carrot" class="group-hover:text-green-600"></i>
+                        <span class="text-xs font-medium">Vegetales</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-2xl flex flex-col items-center gap-2 hover:bg-green-50 transition-colors cursor-pointer group">
+                        <i data-lucide="wheat" class="group-hover:text-green-600"></i>
+                        <span class="text-xs font-medium">Granos</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function logout() {
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
+
+        const role = localStorage.getItem('userRole');
+        if (!role || (role !== 'starter' && role !== 'premium')) {
+            if (role === 'admin' || role === 'empleado') {
+                // allow
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>
